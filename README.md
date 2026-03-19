@@ -80,7 +80,7 @@ src/
 El roadmap sugiere un backend NestJS con estas piezas tipicas:
 
 - Node.js
-- npm
+- pnpm
 - NestJS
 - PostgreSQL
 - Prisma
@@ -100,8 +100,8 @@ Cuando el proyecto avance, conviene documentar al menos:
 Cuando existan las dependencias del proyecto, el flujo normal deberia ser:
 
 ```bash
-npm install
-npm run start:dev
+pnpm install
+pnpm start:dev
 ```
 
 ## Notas
