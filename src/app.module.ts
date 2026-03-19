@@ -12,18 +12,18 @@ import { PrismaModule } from './prisma/prisma.module';
 import { CommonModule } from './common/common.module';
 
 @Module({
-  imports: [
-    AuthModule,
-    UsersModule,
-    TicketsModule,
-    CommentsModule,
-    AttachmentsModule,
-    AuditLogModule,
-    NotificationsModule,
-    PrismaModule,
-    CommonModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        AuthModule,
+        UsersModule,
+        TicketsModule,
+        CommentsModule,
+        AttachmentsModule,
+        AuditLogModule,
+        NotificationsModule,
+        PrismaModule,
+        CommonModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {}

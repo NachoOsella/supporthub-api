@@ -1,26 +1,46 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTicketDto } from './dto/create-ticket.dto';
-import { UpdateTicketDto } from './dto/update-ticket.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Ticket } from './types/ticket.type';
 
 @Injectable()
 export class TicketsService {
-  create(createTicketDto: CreateTicketDto) {
-    return 'This action adds a new ticket';
-  }
+    private readonly tickets: Ticket[] = [
+        {
+            id: 1,
+            title: 'Issue with product',
+            description: 'The product I received is defective.',
+            status: 'open',
+            customerEmail: 'test@gmail.com',
+        },
+    ];
 
-  findAll() {
-    return `This action returns all tickets`;
-  }
+    findAll(): Ticket[] {
+        return this.tickets;
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} ticket`;
-  }
+    findById(id: number): Ticket {
+        const ticket = this.tickets.find((item) => item.id === id);
 
-  update(id: number, updateTicketDto: UpdateTicketDto) {
-    return `This action updates a #${id} ticket`;
-  }
+        if (!ticket) {
+            throw new NotFoundException('Ticket not finded');
+        }
 
-  remove(id: number) {
-    return `This action removes a #${id} ticket`;
-  }
+        return ticket;
+    }
+
+    create(
+        title: string,
+        description: string | undefined,
+        customerEmail: string,
+    ): Ticket {
+        const newTicket: Ticket = {
+            id: this.tickets.length + 1,
+            title,
+            description,
+            customerEmail,
+            status: 'open',
+        };
+
+        this.tickets.push(newTicket);
+        return newTicket;
+    }
 }
