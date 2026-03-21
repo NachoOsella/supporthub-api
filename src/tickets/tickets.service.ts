@@ -69,6 +69,10 @@ export class TicketsService {
             throw new BadRequestException('The ticket Id is required');
         }
 
+        if (!['open', 'in_progress', 'closed'].includes(newStatus)) {
+            throw new BadRequestException('Invalid status value');
+        }
+
         const ticket = this.findById(id);
 
         ticket.status = newStatus;
