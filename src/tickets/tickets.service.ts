@@ -3,7 +3,7 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { Ticket } from './types/ticket.type';
+import { Ticket, TicketStatus } from './types/ticket.type';
 
 @Injectable()
 export class TicketsService {
@@ -57,5 +57,22 @@ export class TicketsService {
 
         this.tickets.push(newTicket);
         return newTicket;
+    }
+
+    // Updates the status of the ticket
+    updateStatus(id: number, newStatus: TicketStatus): Ticket {
+        if (!newStatus) {
+            throw new BadRequestException('newStatus is required');
+        }
+
+        if (!id) {
+            throw new BadRequestException('The ticket Id is required');
+        }
+
+        const ticket = this.findById(id);
+
+        ticket.status = newStatus;
+
+        return ticket;
     }
 }
