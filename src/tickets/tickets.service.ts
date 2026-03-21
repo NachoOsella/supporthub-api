@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import { Ticket } from './types/ticket.type';
 
 @Injectable()
@@ -13,10 +17,12 @@ export class TicketsService {
         },
     ];
 
+    // Returns all tickets
     findAll(): Ticket[] {
         return this.tickets;
     }
 
+    // Returns a ticket by its ID
     findById(id: number): Ticket {
         const ticket = this.tickets.find((item) => item.id === id);
 
@@ -27,11 +33,20 @@ export class TicketsService {
         return ticket;
     }
 
+    // Creates a new ticket and adds it to the list
     create(
         title: string,
         description: string | undefined,
         customerEmail: string,
     ): Ticket {
+        if (!title || title.trim().length < 5) {
+            throw new BadRequestException('Invalid tittle');
+        }
+
+        if (!customerEmail) {
+            throw new BadRequestException('Customer email is required');
+        }
+
         const newTicket: Ticket = {
             id: this.tickets.length + 1,
             title,
