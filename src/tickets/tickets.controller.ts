@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { TicketsService } from './tickets.service';
+import { TicketStatus } from './types/ticket.type';
 
 @Controller('tickets')
 export class TicketsController {
@@ -25,6 +26,14 @@ export class TicketsController {
             title,
             description,
             customerEmail ?? 'test2@gmail.com',
+        );
+    }
+
+    @Patch(':id/status')
+    updateStatus(@Param('id') id: string, @Body('status') newStatus: string) {
+        return this.ticketService.updateStatus(
+            Number(id),
+            newStatus as TicketStatus,
         );
     }
 }
