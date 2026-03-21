@@ -69,14 +69,22 @@ export class TicketsService {
             throw new BadRequestException('The ticket Id is required');
         }
 
-        if (!['open', 'in_progress', 'closed'].includes(newStatus)) {
-            throw new BadRequestException('Invalid status value');
-        }
+        this.validateStatus(newStatus);
 
         const ticket = this.findById(id);
 
         ticket.status = newStatus;
 
         return ticket;
+    }
+
+    private validateStatus(status: string): boolean {
+        const validStatuses: TicketStatus[] = ['open', 'in_progress', 'closed'];
+
+        if (!validStatuses.includes(status as TicketStatus)) {
+            throw new BadRequestException('Invalid status value');
+        }
+
+        return true;
     }
 }
