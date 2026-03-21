@@ -27,7 +27,7 @@ export class TicketsService {
         const ticket = this.tickets.find((item) => item.id === id);
 
         if (!ticket) {
-            throw new NotFoundException('Ticket not finded');
+            throw new NotFoundException('Ticket not found');
         }
 
         return ticket;
@@ -40,7 +40,7 @@ export class TicketsService {
         customerEmail: string,
     ): Ticket {
         if (!title || title.trim().length < 5) {
-            throw new BadRequestException('Invalid tittle');
+            throw new BadRequestException('Invalid title');
         }
 
         if (!customerEmail) {
