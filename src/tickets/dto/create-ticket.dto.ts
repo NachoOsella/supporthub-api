@@ -1,1 +1,14 @@
-export class CreateTicketDto {}
+import { IsEmail, IsString, MinLength } from 'class-validator';
+
+export class CreateTicketDto {
+    @IsString()
+    @MinLength(5)
+    title: string;
+
+    @IsString()
+    @MinLength(10)
+    description: string;
+
+    @IsEmail()
+    customerEmail: string;
+}
