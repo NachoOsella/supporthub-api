@@ -7,18 +7,26 @@ import { TicketStatus } from './types/ticket.type';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketStatusDto } from './dto/update-ticket-status.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PaginatedResponseDto } from 'src/common/dto/paginated-response.dto';
 
 @Injectable()
 export class TicketsService {
     constructor(private readonly prisma: PrismaService) {}
 
-    // Returns all tickets, optionally filtered by status
-    findAll(status?: TicketStatus) {
-        return this.prisma.ticket.findMany({
-            where: status ? { status } : {},
-            include: { customer: true },
-            take: 20,
-        });
+    async findAll(status?: TicketStatus, page: number = 1, limit: number = 10) {
+        const where = status ? { status } : {};
+
+        const [tickets, total] = await Promise.all([
+            this.prisma.ticket.findMany({
+                where,
+                include: { customer: true },
+                skip: (page - 1) * limit,
+                take: limit,
+            }),
+            this.prisma.ticket.count({ where }),
+        ]);
+
+        return new PaginatedResponseDto(tickets, total, page, limit);
     }
 
     // Returns a ticket by its ID

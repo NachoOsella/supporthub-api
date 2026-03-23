@@ -25,7 +25,11 @@ export class TicketsController {
         enum: ['open', 'in_progress', 'closed'],
     })
     findAll(@Query() query: GetTicketsQueryDto) {
-        return this.ticketService.findAll(query.status);
+        return this.ticketService.findAll(
+            query.status,
+            query.page,
+            query.limit,
+        );
     }
 
     @Get(':id')
