@@ -3,7 +3,7 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { Ticket } from './types/ticket.type';
+import { Ticket, TicketStatus } from './types/ticket.type';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketStatusDto } from './dto/update-ticket-status.dto';
 
@@ -11,8 +11,11 @@ import { UpdateTicketStatusDto } from './dto/update-ticket-status.dto';
 export class TicketsService {
     private tickets: Ticket[] = [];
 
-    // Returns all tickets
-    findAll(): Ticket[] {
+    // Returns all tickets, optionally filtered by status
+    findAll(status?: TicketStatus): Ticket[] {
+        if (status) {
+            return this.tickets.filter((ticket) => ticket.status === status);
+        }
         return this.tickets;
     }
 
