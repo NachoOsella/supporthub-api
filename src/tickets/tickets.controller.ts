@@ -1,7 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { TicketsService } from './tickets.service';
-import { TicketStatus } from './types/ticket.type';
+import { CreateTicketDto } from './dto/create-ticket.dto';
+import { UpdateTicketStatusDto } from './dto/update-ticket-status.dto';
 
+@ApiTags('tickets')
 @Controller('tickets')
 export class TicketsController {
     constructor(private readonly ticketService: TicketsService) {}
@@ -17,23 +20,15 @@ export class TicketsController {
     }
 
     @Post()
-    create(
-        @Body('title') title: string,
-        @Body('description') description?: string,
-        @Body('customerEmail') customerEmail?: string,
-    ) {
-        return this.ticketService.create(
-            title,
-            description,
-            customerEmail ?? 'test2@gmail.com',
-        );
+    create(@Body() dto: CreateTicketDto) {
+        return this.ticketService.create(dto);
     }
 
     @Patch(':id/status')
-    updateStatus(@Param('id') id: string, @Body('status') newStatus: string) {
-        return this.ticketService.updateStatus(
-            Number(id),
-            newStatus as TicketStatus,
-        );
+    updateStatus(
+        @Param('id') id: string,
+        @Body() statusDto: UpdateTicketStatusDto,
+    ) {
+        return this.ticketService.updateStatus(Number(id), statusDto);
     }
 }
