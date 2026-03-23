@@ -3,57 +3,70 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { Ticket, TicketStatus } from './types/ticket.type';
+import { TicketStatus } from './types/ticket.type';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketStatusDto } from './dto/update-ticket-status.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TicketsService {
-    private tickets: Ticket[] = [];
+    constructor(private readonly prisma: PrismaService) {}
 
     // Returns all tickets, optionally filtered by status
-    findAll(status?: TicketStatus): Ticket[] {
-        if (status) {
-            return this.tickets.filter((ticket) => ticket.status === status);
-        }
-        return this.tickets;
+    findAll(status?: TicketStatus) {
+        return this.prisma.ticket.findMany({
+            where: status ? { status } : {},
+            include: { customer: true },
+            take: 20,
+        });
     }
 
     // Returns a ticket by its ID
-    findById(id: number): Ticket {
-        const ticket = this.tickets.find((item) => item.id === id);
+    async findById(id: number) {
+        const ticket = await this.prisma.ticket.findUnique({
+            where: { id },
+            include: { customer: true },
+        });
 
         if (!ticket) {
-            throw new NotFoundException('Ticket not found');
+            throw new NotFoundException(`Ticket with ID ${id} not found`);
         }
 
         return ticket;
     }
 
     // Creates a new ticket and adds it to the list
-    create(dto: CreateTicketDto): Ticket {
-        const newTicket: Ticket = {
-            id: this.tickets.length + 1,
-            title: dto.title,
-            description: dto.description,
-            customerEmail: dto.customerEmail,
-            status: 'open',
-        };
+    async create(dto: CreateTicketDto) {
+        const newTicket = this.prisma.ticket.create({
+            data: {
+                title: dto.title,
+                description: dto.description,
+                status: 'open',
+                customer: {
+                    connectOrCreate: {
+                        where: { email: dto.customerEmail },
+                        create: { email: dto.customerEmail },
+                    },
+                },
+            },
+            include: { customer: true },
+        });
 
-        this.tickets.push(newTicket);
         return newTicket;
     }
 
     // Updates the status of the ticket
-    updateStatus(id: number, updateStatusDto: UpdateTicketStatusDto): Ticket {
+    async updateStatus(id: number, updateStatusDto: UpdateTicketStatusDto) {
         if (!id) {
             throw new BadRequestException('The ticket Id is required');
         }
 
-        const ticket = this.findById(id);
+        await this.findById(id);
 
-        ticket.status = updateStatusDto.status;
-
-        return ticket;
+        return this.prisma.ticket.update({
+            where: { id },
+            data: { status: updateStatusDto.status },
+            include: { customer: true },
+        });
     }
 }
