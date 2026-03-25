@@ -12,7 +12,7 @@ import com.supporthub.api.users.dto.CreateUserRequestDto;
 import com.supporthub.api.users.dto.UserResponse;
 import com.supporthub.api.users.service.UsersService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 
 @RestController
@@ -30,7 +30,7 @@ public class UsersController {
         return usersService.findAll();
     }
 
-    @GetMapping("{/id}")
+    @GetMapping("/{id}")
     public UserResponse findById(@PathVariable Long id) {
         return usersService.findById(id);
     }
