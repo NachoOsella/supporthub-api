@@ -1,14 +1,19 @@
 server:
   address: ${HOST:127.0.0.1}
-  port: ${PORT:3000}
+  port: ${PORT:8080}
 
 spring:
   datasource:
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/supporthub}
+    username: ${DATABASE_USER:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: false
 
 springdoc:
