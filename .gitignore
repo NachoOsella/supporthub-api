@@ -1,30 +1,17 @@
-# dependencies
-node_modules/
-
-# build output
-dist/
-coverage/
-
-# environment
+# local env
 .env
 .env.*
 !.env.example
 
+# maven
+/target/
+.mvn/
+
 # logs
 *.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# editor and OS files
-.DS_Store
-Thumbs.db
+# editors
 .vscode/
 .idea/
-
-# Nest / TypeScript / tooling caches
-.nest/
-.turbo/
-.cache/
-*.tsbuildinfo
+.DS_Store
+Thumbs.db

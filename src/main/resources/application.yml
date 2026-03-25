@@ -1,0 +1,16 @@
+server:
+  address: ${HOST:127.0.0.1}
+  port: ${PORT:3000}
+
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/supporthub}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+springdoc:
+  swagger-ui:
+    path: /api
