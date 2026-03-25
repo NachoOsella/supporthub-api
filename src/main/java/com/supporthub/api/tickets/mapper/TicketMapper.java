@@ -12,14 +12,8 @@ import com.supporthub.api.tickets.entity.Ticket;
 public class TicketMapper {
 
     public TicketResponse toResponse(Ticket ticket) {
-        return new TicketResponse(
-                ticket.getId(),
-                ticket.getTitle(),
-                ticket.getDescription(),
-                ticket.getStatus(),
-                ticket.getCustomer().getId(),
-                ticket.getCustomer().getEmail(),
-                ticket.getCreatedAt());
+        return new TicketResponse(ticket.getId(), ticket.getTitle(), ticket.getDescription(), ticket.getStatus(),
+                ticket.getCustomer().getId(), ticket.getCustomer().getEmail(), ticket.getCreatedAt());
     }
 
     public Ticket toEntity(CreateTicketRequestDto dto) {
@@ -30,8 +24,6 @@ public class TicketMapper {
     }
 
     public List<TicketResponse> toResponseList(List<Ticket> tickets) {
-        return tickets.stream()
-                .map(this::toResponse)
-                .toList();
+        return tickets.stream().map(this::toResponse).toList();
     }
 }
