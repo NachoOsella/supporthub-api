@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.supporthub.api.users.dto.CreateUserRequestDto;
 import com.supporthub.api.users.dto.UserResponse;
-import com.supporthub.api.users.repository.UserRepository;
 import com.supporthub.api.users.service.UsersService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -20,11 +19,9 @@ import jakarta.validation.Valid;
 @RequestMapping("/users")
 public class UsersController {
 
-    private final UserRepository userRepository;
     private final UsersService usersService;
 
-    public UsersController(UserRepository userRepository, UsersService usersService) {
-        this.userRepository = userRepository;
+    public UsersController(UsersService usersService) {
         this.usersService = usersService;
     }
 
