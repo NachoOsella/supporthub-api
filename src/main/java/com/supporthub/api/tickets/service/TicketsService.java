@@ -11,15 +11,19 @@ import com.supporthub.api.tickets.dto.TicketResponse;
 import com.supporthub.api.tickets.entity.Ticket;
 import com.supporthub.api.tickets.mapper.TicketMapper;
 import com.supporthub.api.tickets.repository.TicketRepository;
+import com.supporthub.api.users.entity.User;
+import com.supporthub.api.users.repository.UserRepository;
 
 @Service
 public class TicketsService {
     private final TicketRepository ticketRepository;
     private final TicketMapper ticketMapper;
+    private final UserRepository userRepository;
 
-    public TicketsService(TicketRepository ticketRepository, TicketMapper ticketMapper) {
+    public TicketsService(TicketRepository ticketRepository, TicketMapper ticketMapper, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.ticketMapper = ticketMapper;
+        this.userRepository = userRepository;
     }
 
     public List<TicketResponse> findAll() {
@@ -35,6 +39,9 @@ public class TicketsService {
 
     public TicketResponse create(CreateTicketRequestDto createDto) {
         Ticket ticket = ticketMapper.toEntity(createDto);
+        User customer = userRepository.findById(createDto.customerId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found"));
+        ticket.setCustomer(customer);
 
         Ticket saved = ticketRepository.save(ticket);
 

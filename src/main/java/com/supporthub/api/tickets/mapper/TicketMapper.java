@@ -2,21 +2,36 @@ package com.supporthub.api.tickets.mapper;
 
 import java.util.List;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 import com.supporthub.api.tickets.dto.CreateTicketRequestDto;
 import com.supporthub.api.tickets.dto.TicketResponse;
 import com.supporthub.api.tickets.entity.Ticket;
 
-@Mapper(componentModel = "spring")
-public interface TicketMapper {
+@Component
+public class TicketMapper {
 
-    @Mapping(source = "tittle", target = "title")
-    TicketResponse toResponse(Ticket ticket);
+    public TicketResponse toResponse(Ticket ticket) {
+        return new TicketResponse(
+                ticket.getId(),
+                ticket.getTitle(),
+                ticket.getDescription(),
+                ticket.getStatus(),
+                ticket.getCustomer().getId(),
+                ticket.getCustomer().getEmail(),
+                ticket.getCreatedAt());
+    }
 
-    @Mapping(source = "title", target = "tittle")
-    Ticket toEntity(CreateTicketRequestDto dto);
+    public Ticket toEntity(CreateTicketRequestDto dto) {
+        Ticket ticket = new Ticket();
+        ticket.setTitle(dto.title());
+        ticket.setDescription(dto.description());
+        return ticket;
+    }
 
-    List<TicketResponse> toResponseList(List<Ticket> tickets);
+    public List<TicketResponse> toResponseList(List<Ticket> tickets) {
+        return tickets.stream()
+                .map(this::toResponse)
+                .toList();
+    }
 }
